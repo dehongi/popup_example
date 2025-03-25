@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">  <!-- Added: Specifies the character encoding -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Added: Configures the viewport for responsiveness -->
+  <title>Open Link in Popup</title>
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+    #linkInput {
+      width: 300px;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+    }
+    #openButton {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Enter a Link:</h2>
+
+<input type="text" id="linkInput" placeholder="Enter a URL here">
+<button id="openButton">Open in Popup</button>
+
+<script>
+  const linkInput = document.getElementById("linkInput");
+  const openButton = document.getElementById("openButton");
+
+  openButton.addEventListener("click", () => {
+    const link = linkInput.value;
+
+    if (link) {
+      // Basic validation (check if it starts with http or https)
+      if (!link.startsWith("http://") && !link.startsWith("https://")) {
+        alert("Invalid link. Please enter a link starting with http:// or https://");
+        return;
+      }
+      
+      // Open the link in a new popup window
+      window.open(link, "popupWindow", "width=600,height=400,resizable=yes,scrollbars=yes");
+      
+      // Clear the input field after opening the popup (optional)
+      linkInput.value = "";
+    } else {
+      alert("Please enter a link.");
+    }
+  });
+</script>
+
+</body>
+</html>
