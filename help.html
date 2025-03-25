@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opening Links in Popups: A Simple JavaScript Example</title>
+    <style>
+        /* Basic styling for the blog post - you can customize this */
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: #333;
+        }
+
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            overflow-x: auto;
+            border: 1px solid #ddd;
+        }
+
+        code {
+            font-family: monospace;
+        }
+
+        .code-block {
+            background-color: #f4f4f4;
+            padding: 10px;
+            overflow-x: auto;
+            border: 1px solid #ddd;
+            margin-bottom: 15px;
+        }
+
+        .code-block code {
+            display: block;
+            white-space: pre;
+        }
+
+        .important-note {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Opening Links in Popups: A Simple JavaScript Example</h1>
+
+    <p>Have you ever wanted to open a link in a new popup window directly from your web page? It's a common task, and
+        while modern browsers have some restrictions, it's still possible to achieve this effect with a bit of
+        JavaScript. In this post, we'll walk through a simple example that lets users enter a URL, and then, with a
+        click of a button, opens that URL in a new popup window.</p>
+
+    <h2>The Goal</h2>
+
+    <p>Our goal is to create a basic web page that:</p>
+    <ol>
+        <li>Provides an input field for users to enter a URL.</li>
+        <li>Has a button that, when clicked, opens the entered URL in a new popup window.</li>
+        <li>Includes basic validation to ensure the user enters a valid link (starting with <code>http://</code> or
+            <code>https://</code>).</li>
+        <li>Clears the input field after opening the popup.</li>
+    </ol>
+
+    <h2>The HTML Structure</h2>
+
+    <p>Let's start with the HTML (<code>index.html</code>) that forms the foundation of our page:</p>
+
+    <div class="code-block">
+        <code>
+            &lt;!DOCTYPE html&gt;<br>
+            &lt;html lang="en"&gt;<br>
+            &lt;head&gt;<br>
+            &nbsp;&nbsp;&lt;meta charset="UTF-8"&gt;<br>
+            &nbsp;&nbsp;&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;<br>
+            &nbsp;&nbsp;&lt;title&gt;Open Link in Popup&lt;/title&gt;<br>
+            &nbsp;&nbsp;&lt;style&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;/* Basic CSS styling (you can customize this) */<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;body {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;font-family: sans-serif;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;#linkInput {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;width: 300px;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;padding: 8px;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;margin-bottom: 10px;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;border: 1px solid #ccc;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;#openButton {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;padding: 10px 20px;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;background-color: #4CAF50;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;color: white;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;border: none;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cursor: pointer;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;&lt;/style&gt;<br>
+            &lt;/head&gt;<br>
+            &lt;body&gt;<br>
+            <br>
+            &nbsp;&nbsp;&lt;h2&gt;Enter a Link:&lt;/h2&gt;<br>
+            <br>
+            &nbsp;&nbsp;&lt;input type="text" id="linkInput" placeholder="Enter a URL here"&gt;<br>
+            &nbsp;&nbsp;&lt;button id="openButton"&gt;Open in Popup&lt;/button&gt;<br>
+            <br>
+            &nbsp;&nbsp;&lt;script&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;// JavaScript code will go here<br>
+            &nbsp;&nbsp;&lt;/script&gt;<br>
+            <br>
+            &lt;/body&gt;<br>
+            &lt;/html&gt;
+        </code>
+    </div>
+
+    <ul>
+        <li>We have a simple input field (<code>#linkInput</code>) for the URL and a button (<code>#openButton</code>)
+            to trigger the popup.</li>
+        <li>Basic CSS is included within <code>&lt;style&gt;</code> tags for a clean look.</li>
+        <li>The <code>&lt;meta charset="UTF-8"&gt;</code> tag ensures proper character encoding, and
+            <code>&lt;meta name="viewport" ...&gt;</code> makes the page responsive.</li>
+    </ul>
+
+    <h2>The JavaScript Magic</h2>
+
+    <p>Now, let's add the JavaScript code within the <code>&lt;script&gt;</code> tags to bring our page to life:</p>
+
+    <div class="code-block">
+        <code>
+            const linkInput = document.getElementById("linkInput");<br>
+            const openButton = document.getElementById("openButton");<br>
+            <br>
+            openButton.addEventListener("click", () => {<br>
+            &nbsp;&nbsp;const link = linkInput.value;<br>
+            <br>
+            &nbsp;&nbsp;if (link) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;// Basic validation (check if it starts with http or https)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;if (!link.startsWith("http://") && !link.startsWith("https://")) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alert("Invalid link. Please enter a link starting with http:// or https://");<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;// Open the link in a new popup window<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;const popupFeatures = "width=600,height=400,resizable=yes,scrollbars=yes,menubar=no,toolbar=no,status=no,location=no";<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;window.open(link, "popupWindow", popupFeatures);<br>
+            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;// Clear the input field after opening the popup (optional)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;linkInput.value = "";<br>
+            &nbsp;&nbsp;} else {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;alert("Please enter a link.");<br>
+            &nbsp;&nbsp;}<br>
+            });
+        </code>
+    </div>
+
+    <h3>Let's break down the JavaScript:</h3>
+    <ol>
+        <li><strong>Get Elements:</strong> We get references to the input field and the button using
+            <code>document.getElementById()</code>.</li>
+        <li><strong>Event Listener:</strong> We attach a <code>click</code> event listener to the button. When the
+            button is clicked, the code inside the listener will execute.</li>
+        <li><strong>Get the Link:</strong> <code>linkInput.value</code> retrieves the URL entered by the user.</li>
+        <li><strong>Validation:</strong>
+            <ul>
+                <li>We check if the <code>link</code> is not empty.</li>
+                <li>We use <code>link.startsWith("http://")</code> and <code>link.startsWith("https://")</code> to
+                    perform a basic check for a valid URL.</li>
+                <li>If the link is not valid, an alert is shown.</li>
+            </ul>
+        </li>
+        <li><strong>Open the Popup:</strong>
+            <ul>
+                <li><code>window.open(link, "popupWindow", popupFeatures)</code> is the core of the functionality.</li>
+                <li><code>link</code>: The URL to open.</li>
+                <li><code>"popupWindow"</code>: A name for the popup (useful if you want to target the same popup
+                    later).</li>
+                <li><code>popupFeatures</code>: A string that defines the popup's properties (width, height, resizable,
+                    etc.).</li>
+            </ul>
+        </li>
+        <li><strong>Clear the input:</strong> The input field is cleared after opening the popup.</li>
+        <li><strong>Empty link alert:</strong> If the link is empty, an alert is shown.</li>
+    </ol>
+
+    <div class="important-note">
+        <h2>Important Note: Browser Restrictions</h2>
+        <p>Modern browsers have security measures that prevent websites from manipulating popup windows too much. One
+            key restriction is that you <strong>cannot reliably hide the address bar</strong> in a popup. This is a
+            security feature to prevent phishing attacks. The <code>location=no</code> in the <code>popupFeatures</code>
+            will be ignored.</p>
+    </div>
+
+    <h2>Customization</h2>
+
+    <p>You can easily customize this example:</p>
+    <ul>
+        <li><strong>Styling:</strong> Change the CSS to match your website's design.</li>
+        <li><strong>Popup Features:</strong> Adjust the <code>popupFeatures</code> string to control the popup's size,
+            resizability, and scrollbars.</li>
+        <li><strong>Validation:</strong> Add more complex validation rules to check for specific URL patterns or other
+            criteria.</li>
+    </ul>
+
+    <h2>Conclusion</h2>
+
+    <p>This simple example demonstrates how to open links in popup windows using HTML, CSS, and JavaScript. While
+        browser restrictions limit what you can do with popups, you can still create useful and functional popups for
+        various purposes. Remember to always be mindful of user experience and avoid using popups in ways that might be
+        intrusive or annoying.</p>
+
+    <h2>Further Exploration</h2>
+
+    <ul>
+        <li><strong>Modal Dialogs:</strong> If you need a popup-like experience within the same page, consider using
+            modal dialogs.</li>
+        <li><strong>Advanced Validation:</strong> Explore more robust URL validation techniques.</li>
+        <li><strong>Desktop app frameworks:</strong> If you need more control over the window, consider desktop app
+            frameworks like Electron.</li>
+    </ul>
+
+    <h2>Code Repository</h2>
+
+    <p>You can find the complete code for this example on <a href="https://github.com/dehongi/popup_example">GitHub</a>.
+    </p>
+
+</body>
+
+</html>
